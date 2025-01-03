@@ -48,13 +48,13 @@ class Coord:
 		Finds the GPS cordinate of a new point, given an initial location, radial, and distance
 		Uses the great circle method found in From the Ground Up 29th Ed
 
-	Inputs:	lat1 - iniital lattitude, decimal degrees
+	Inputs:	lat1 - iniital latitude, decimal degrees
 			lon1 - initial longitude, decimal degrees
 			radial - radial direction of new point relitive to true noth, decimal degrees
 			dist - distance to new point in nautical miles
 			unit - unit of measure to be converted from to nautical miles
 
-	Output:	lat2 - final lattitude, decinal degrees
+	Output:	lat2 - final latitude, decinal degrees
 			lon2 - final longitude, decimal degrees
 '''
 def radialDistance(lat1, lon1, radial, dist, unit):
@@ -118,7 +118,7 @@ def radialDistance(lat1, lon1, radial, dist, unit):
 
 	return lat2, lon2
 
-def elipRadius(lattitude, longitude):
+def elipRadius(latitude, longitude):
 	semiMajor = 6378137.0
 	flatteningCoef = 0.00335281068
 	eplipsoid = {   'semiMajor' : semiMajor, 
@@ -126,7 +126,7 @@ def elipRadius(lattitude, longitude):
 					'semiMinor' : semiMajor*(1-flatteningCoef), 
 					'firstEccentricity' : numpy.sqrt(abs(1-(pow((semiMajor*(1-flatteningCoef)),2))/(pow(semiMajor,2)))),
 					'secondEccentricity' : numpy.sqrt(abs((pow((semiMajor*(1-flatteningCoef)),2))/(pow(semiMajor,2))-1))}
-	elipsoidRadius = numpy.sqrt((pow((pow(eplipsoid['semiMajor'],2)*numpy.cos(lattitude)),2) +pow((pow(eplipsoid['semiMinor'],2)*numpy.sin(lattitude)),2))/(pow((eplipsoid['semiMajor']*numpy.cos(lattitude)),2) +pow((eplipsoid['semiMinor']*numpy.sin(lattitude)),2)))
+	elipsoidRadius = numpy.sqrt((pow((pow(eplipsoid['semiMajor'],2)*numpy.cos(latitude)),2) +pow((pow(eplipsoid['semiMinor'],2)*numpy.sin(latitude)),2))/(pow((eplipsoid['semiMajor']*numpy.cos(latitude)),2) +pow((eplipsoid['semiMinor']*numpy.sin(latitude)),2)))
 	return elipsoidRadius
 
 #Uses WGS84 sea level correction using bilinear interpolation of point table
@@ -135,13 +135,13 @@ def altitudeCorrection(latitude, longitude, elevation):
         #use geoid model if near ground
         for line in open('WGS84-elev-grid.txt'): #finds 4 points surrounding GPS location
             splitLine = line.split('\\s')
-            if numpy.floor(lattitude*2)/2 is float(splitLine[0]) and numpy.floor(longitude*2)/2 is float(splitLine[1]):
+            if numpy.floor(latitude*2)/2 is float(splitLine[0]) and numpy.floor(longitude*2)/2 is float(splitLine[1]):
                 elevationCorr[0][0] = float(splitLine[2])
-            if numpy.ceil(lattitude*2)/2 is float(splitLine[0]) and numpy.ceil(longitude*2)/2 is float(splitLine[1]):
+            if numpy.ceil(latitude*2)/2 is float(splitLine[0]) and numpy.ceil(longitude*2)/2 is float(splitLine[1]):
                 elevationCorr[1][1] = float(splitLine[2])
-            if numpy.floor(lattitude*2)/2 is float(splitLine[0]) and numpy.ceil(longitude*2)/2 is float(splitLine[1]):
+            if numpy.floor(latitude*2)/2 is float(splitLine[0]) and numpy.ceil(longitude*2)/2 is float(splitLine[1]):
                 elevationCorr[0][1] = float(splitLine[2])
-            if numpy.ceil(lattitude*2)/2 is float(splitLine[0]) and numpy.floor(longitude*2)/2 is float(splitLine[1]):
+            if numpy.ceil(latitude*2)/2 is float(splitLine[0]) and numpy.floor(longitude*2)/2 is float(splitLine[1]):
                 elevationCorr[1][0] = float(splitLine[2])
     else:
         #use elipsoid for atmospheric calculations
@@ -153,7 +153,7 @@ def altitudeCorrection(latitude, longitude, elevation):
                         'semiMinor' : semiMajor*(1-flatteningCoef), 
                         'firstEccentricity' : numpy.sqrt(abs(1-(pow((semiMajor*(1-flatteningCoef)),2))/(pow(semiMajor,2)))),
                         'secondEccentricity' : numpy.sqrt(abs((pow((semiMajor*(1-flatteningCoef)),2))/(pow(semiMajor,2))-1))}
-        elipsoidRadius = numpy.sqrt((pow((pow(eplipsoid['semiMajor'],2)*numpy.cos(lattitude)),2) +pow((pow(eplipsoid['semiMinor'],2)*numpy.sin(lattitude)),2))/(pow((eplipsoid['semiMajor']*numpy.cos(lattitude)),2) +pow((eplipsoid['semiMinor']*numpy.sin(lattitude)),2)))
+        elipsoidRadius = numpy.sqrt((pow((pow(eplipsoid['semiMajor'],2)*numpy.cos(latitude)),2) +pow((pow(eplipsoid['semiMinor'],2)*numpy.sin(latitude)),2))/(pow((eplipsoid['semiMajor']*numpy.cos(latitude)),2) +pow((eplipsoid['semiMinor']*numpy.sin(latitude)),2)))
         
     
     #Bilinear interpolation of geoid model

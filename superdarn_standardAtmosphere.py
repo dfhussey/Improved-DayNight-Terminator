@@ -29,7 +29,7 @@ def temperature(altitude):
     alt = -2000
     lower = None
     upper = None
-    for alt in AtmospericConstants.standard
+    for alt in AtmospericConstants.standard:
       if alt.altitude < altitude:
         lower = alt.altitude
     
